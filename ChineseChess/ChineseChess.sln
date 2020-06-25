@@ -1,9 +1,7 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChineseChess", "Assembly-CSharp.csproj", "{196ED32F-0BAF-F1DA-3AC7-55B097E5B528}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChineseChess", "Assembly-CSharp-Editor.csproj", "{27362E19-C10E-ECBC-7F96-168A344F92E6}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChineseChess", "ChineseChess.csproj", "{8F10C16D-F7D8-36AB-CAC6-51C016DCDB5C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,19 +9,12 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{196ED32F-0BAF-F1DA-3AC7-55B097E5B528}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{196ED32F-0BAF-F1DA-3AC7-55B097E5B528}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{196ED32F-0BAF-F1DA-3AC7-55B097E5B528}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{196ED32F-0BAF-F1DA-3AC7-55B097E5B528}.Release|Any CPU.Build.0 = Release|Any CPU
-		{27362E19-C10E-ECBC-7F96-168A344F92E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{27362E19-C10E-ECBC-7F96-168A344F92E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{27362E19-C10E-ECBC-7F96-168A344F92E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{27362E19-C10E-ECBC-7F96-168A344F92E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F10C16D-F7D8-36AB-CAC6-51C016DCDB5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F10C16D-F7D8-36AB-CAC6-51C016DCDB5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F10C16D-F7D8-36AB-CAC6-51C016DCDB5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F10C16D-F7D8-36AB-CAC6-51C016DCDB5C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = Assembly-CSharp.csproj
 	EndGlobalSection
 EndGlobal

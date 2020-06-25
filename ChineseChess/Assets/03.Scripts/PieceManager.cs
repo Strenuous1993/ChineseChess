@@ -81,7 +81,7 @@ public class PieceManager : MonoBehaviour
             //获得父级Object
             //GameObject obj1 = GameObject.Find("Coordinates");
             GameObject zuobiao = GameObject.Find(kvp.Key);
-            //在相应坐标未知生成物体
+            //在相应坐标位置生成物体
             Instantiate(kvp.Value,zuobiao.transform.position,Quaternion.identity,chess_board.transform);
             //Debug.Log(zuobiao.name);
           

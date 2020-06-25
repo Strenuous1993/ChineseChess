@@ -14,7 +14,7 @@ public class PieceCtrl : MonoBehaviour
     public GameObject gameObj1;
     private Transform tran_red;
     private Transform tran_black;
-    private int exchange = 0;
+    static public int exchange = 0;
     void move()
     {
 
@@ -48,12 +48,15 @@ public class PieceCtrl : MonoBehaviour
         //计算坐标差的绝对值
         float dis_x = Mathf.Abs(chess_x - destination_x);
         float dis_z = Mathf.Abs(chess_z - destination_z);
-        //Debug.Log("x坐标" + chess_x);
+        //Debug.Log(chess_z > -1.48 && chess_z < 0.39);
         //Debug.Log("z坐标" + chess_z);
         if (chess_z > -1.48 && chess_z < 0.39 && chess_x == destination_x && chess_z > destination_z)
         {
             chess.transform.position = new Vector3(chess.transform.position.x, chess.transform.position.y, hit.collider.gameObject.transform.position.z);
             return true;
+            Debug.Log(111);
+
+
         }
         else if (((dis_x < 1.3 && dis_x > 0.1) ^ (dis_z < 1.3 && dis_z > 0.1)) && destination_z < -1.46 && chess_z >= destination_z)
         {
@@ -493,6 +496,7 @@ public class PieceCtrl : MonoBehaviour
                                     if (Red_BingMove(gameObj, hitInfo) && (hitInfo.transform.position == gameObj.transform.position))
                                     {
                                         exchange = 1;
+                                       
                                     }
 
                                     //Debug.Log(piece_name);
@@ -591,7 +595,7 @@ public class PieceCtrl : MonoBehaviour
                                             exchange = 1;
                                             Destroy(hitInfo.collider.gameObject);
                                         }
-                                        Debug.Log(piece_name);
+                                        //Debug.Log(piece_name);
                                     }
                                     break;
                                 case "red_shi(Clone)":
@@ -682,7 +686,7 @@ public class PieceCtrl : MonoBehaviour
                         break;
                 }
                 //Debug.Log(flag);
-                Debug.Log(exchange);
+                //Debug.Log(exchange);
             }
 
         }
@@ -912,7 +916,7 @@ public class PieceCtrl : MonoBehaviour
                         break;
                 }
                 //Debug.Log(flag);
-                Debug.Log(exchange);
+                //Debug.Log(exchange);
             }
 
         }
