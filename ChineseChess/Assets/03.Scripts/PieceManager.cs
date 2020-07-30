@@ -172,9 +172,36 @@ public class PieceManager : MonoBehaviour
         }
     }
 
-    //棋力计算
-    public int PiecePower()
+    //棋力静态评估函数
+    static public double PiecePower()
     {
-        return 0;
+        int attack_power_red = 0;
+        int power_red = 0;
+        int attack_power_black = 0;
+        int power_black = 0;
+        double total_power;
+        foreach (GameObject gameObject in piece_array)
+        {
+            if (gameObject != null && gameObject.transform.tag == "RedPiece")
+            {
+                power_red += gameObject.GetComponent<Piece>().piece_power;
+                attack_power_red += gameObject.GetComponent<Piece>().piece_attack_power;
+            }
+            else if (gameObject != null && gameObject.transform.tag == "BlackPiece")
+            {
+                power_black -= gameObject.GetComponent<Piece>().piece_power;
+                attack_power_black -= gameObject.GetComponent<Piece>().piece_attack_power;
+            }
+        }
+        System.Random rd = new System.Random();
+        total_power = power_red + power_black + attack_power_black + attack_power_red + rd.NextDouble() * rd.NextDouble();
+        return total_power;
     }
+
+    static public void GetAllMove(GameObject[,] piece_array ,List<GameObject[,]> all_next_move)
+    {
+
+    }
+
+
 }
