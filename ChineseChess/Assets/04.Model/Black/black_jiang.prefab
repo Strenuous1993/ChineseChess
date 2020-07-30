@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 136223621454007220}
   - component: {fileID: 23872959636725794}
   - component: {fileID: 148959160890215808}
+  - component: {fileID: 114635085759355558}
   m_Layer: 0
   m_Name: black_jiang
   m_TagString: BlackPiece
@@ -84,6 +85,23 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1824954424594868}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &114635085759355558
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1824954424594868}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 166ace2bba04b4a4f88a2b90560e7946, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  coor_x: 0
+  coor_y: 4
+  moved: 0
+  piece_id: black_jiang
+  piece_power: 0
+  piece_attack_power: 0
 --- !u!136 &136223621454007220
 CapsuleCollider:
   m_ObjectHideFlags: 1

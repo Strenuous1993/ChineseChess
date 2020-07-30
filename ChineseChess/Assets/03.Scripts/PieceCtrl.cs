@@ -7,11 +7,11 @@ using System.Threading;
 public class PieceCtrl : MonoBehaviour
 {
 
-    private int flag;
+    private int flag = 1;
     private RaycastHit hitInfo;
     private RaycastHit hitInfo1;
-    public GameObject gameObj;
-    public GameObject gameObj1;
+    private GameObject gameObj;
+    private GameObject gameObj1;
     private Transform tran_red;
     private Transform tran_black;
     static public int exchange = 0;
@@ -48,17 +48,17 @@ public class PieceCtrl : MonoBehaviour
         //计算坐标差的绝对值
         float dis_x = Mathf.Abs(chess_x - destination_x);
         float dis_z = Mathf.Abs(chess_z - destination_z);
-        //Debug.Log(chess_z > -1.48 && chess_z < 0.39);
+        //Debug.Log(chess_z > -1.48 && chess_z < 0.39)
         //Debug.Log("z坐标" + chess_z);
-        if (chess_z > -1.48 && chess_z < 0.39 && chess_x == destination_x && chess_z > destination_z)
+        if (chess_z > -1.48 && chess_z < 0.39 && dis_x < 0.0001 && chess_z > destination_z)
         {
             chess.transform.position = new Vector3(chess.transform.position.x, chess.transform.position.y, hit.collider.gameObject.transform.position.z);
+
             return true;
-            Debug.Log(111);
 
 
         }
-        else if (((dis_x < 1.3 && dis_x > 0.1) ^ (dis_z < 1.3 && dis_z > 0.1)) && destination_z < -1.46 && chess_z >= destination_z)
+        else if (((dis_x < 1.3 && dis_x > 0.1) || (dis_z < 1.3 && dis_z > 0.1)) && destination_z < -1.46 && chess_z >= destination_z)
         {
             //物体移动到鼠标获取的坐标物体的位置
             chess.transform.position = hit.collider.gameObject.transform.position;
@@ -484,6 +484,7 @@ public class PieceCtrl : MonoBehaviour
                         break;
                     //如果为棋盘坐标，移动棋子
                     case "Coordinate":
+
                         if (flag == 0)
                         {
 
@@ -495,8 +496,12 @@ public class PieceCtrl : MonoBehaviour
                                     //如果棋子移动了，则轮到对方玩家移动
                                     if (Red_BingMove(gameObj, hitInfo) && (hitInfo.transform.position == gameObj.transform.position))
                                     {
+                                        
+                                        gameObj.GetComponent<Piece>().coor_x = int.Parse(hitInfo.transform.name) / 10;
+                                        gameObj.GetComponent<Piece>().coor_y = int.Parse(hitInfo.transform.name) % 10;
+
                                         exchange = 1;
-                                       
+
                                     }
 
                                     //Debug.Log(piece_name);
@@ -504,6 +509,9 @@ public class PieceCtrl : MonoBehaviour
                                 case "red_shi(Clone)":
                                     if (Red_ShiMove(gameObj, hitInfo) && (hitInfo.transform.position == gameObj.transform.position))
                                     {
+                                        
+                                        gameObj.GetComponent<Piece>().coor_x = int.Parse(hitInfo.transform.name) / 10;
+                                        gameObj.GetComponent<Piece>().coor_y = int.Parse(hitInfo.transform.name) % 10;
                                         exchange = 1;
                                     }
                                     //Debug.Log(piece_name);
@@ -511,6 +519,9 @@ public class PieceCtrl : MonoBehaviour
                                 case "red_ma(Clone)":
                                     if (Red_MaMove(gameObj, hitInfo) && (hitInfo.transform.position == gameObj.transform.position))
                                     {
+                                        
+                                        gameObj.GetComponent<Piece>().coor_x = int.Parse(hitInfo.transform.name) / 10;
+                                        gameObj.GetComponent<Piece>().coor_y = int.Parse(hitInfo.transform.name) % 10;
                                         exchange = 1;
                                     }
                                     //Debug.Log(piece_name);
@@ -518,6 +529,9 @@ public class PieceCtrl : MonoBehaviour
                                 case "red_xiang(Clone)":
                                     if (Red_XiangMove(gameObj, hitInfo) && (hitInfo.transform.position == gameObj.transform.position))
                                     {
+                                        
+                                        gameObj.GetComponent<Piece>().coor_x = int.Parse(hitInfo.transform.name) / 10;
+                                        gameObj.GetComponent<Piece>().coor_y = int.Parse(hitInfo.transform.name) % 10;
                                         exchange = 1;
                                     }
                                     //Debug.Log(piece_name);
@@ -539,6 +553,9 @@ public class PieceCtrl : MonoBehaviour
 
                                         if (Red_CheMove(gameObj, hitInfo) && (hitInfo.transform.position == gameObj.transform.position))
                                         {
+                                            
+                                            gameObj.GetComponent<Piece>().coor_x = int.Parse(hitInfo.transform.name) / 10;
+                                            gameObj.GetComponent<Piece>().coor_y = int.Parse(hitInfo.transform.name) % 10;
                                             exchange = 1;
                                         }
                                         //Debug.Log(piece_name);
@@ -547,6 +564,9 @@ public class PieceCtrl : MonoBehaviour
                                 case "red_jiang(Clone)":
                                     if (Red_JiangMove(gameObj, hitInfo) && (hitInfo.transform.position == gameObj.transform.position))
                                     {
+                                        
+                                        gameObj.GetComponent<Piece>().coor_x = int.Parse(hitInfo.transform.name) / 10;
+                                        gameObj.GetComponent<Piece>().coor_y = int.Parse(hitInfo.transform.name) % 10;
                                         exchange = 1;
                                     }
                                     //Debug.Log(piece_name);
@@ -568,6 +588,9 @@ public class PieceCtrl : MonoBehaviour
 
                                         if (Red_PaoMove(gameObj, hitInfo) && (hitInfo.transform.position == gameObj.transform.position))
                                         {
+                                            
+                                            gameObj.GetComponent<Piece>().coor_x = int.Parse(hitInfo.transform.name) / 10;
+                                            gameObj.GetComponent<Piece>().coor_y = int.Parse(hitInfo.transform.name) % 10;
                                             exchange = 1;
                                         }
                                         //Debug.Log(piece_name);
@@ -575,7 +598,9 @@ public class PieceCtrl : MonoBehaviour
                                     break;
                             }
                         }
-
+                        //玩家移动棋子后更新数组中的棋子位置
+                        GameObject.Find("Main Camera").GetComponent<PieceManager>().PieceMapArray();
+                        //Debug.Log(GameObject.Find("Main Camera").GetComponent<PieceManager>().piece_array[5, 0].GetComponent<Piece>().piece_power);
                         break;
                     //如果为敌对棋子，Destroy棋子然后移动
                     case "BlackPiece":
@@ -592,6 +617,9 @@ public class PieceCtrl : MonoBehaviour
                                     {
                                         if (Red_BingMove(gameObj, hitInfo) && (hitInfo.transform.position == gameObj.transform.position))
                                         {
+                                            
+                                            gameObj.GetComponent<Piece>().coor_x = hitInfo.transform.GetComponent<Piece>().coor_x;
+                                            gameObj.GetComponent<Piece>().coor_y = hitInfo.transform.GetComponent<Piece>().coor_y;
                                             exchange = 1;
                                             Destroy(hitInfo.collider.gameObject);
                                         }
@@ -601,6 +629,9 @@ public class PieceCtrl : MonoBehaviour
                                 case "red_shi(Clone)":
                                     if (Red_ShiMove(gameObj, hitInfo) && (hitInfo.transform.position == gameObj.transform.position))
                                     {
+                                        
+                                        gameObj.GetComponent<Piece>().coor_x = hitInfo.transform.GetComponent<Piece>().coor_x;
+                                        gameObj.GetComponent<Piece>().coor_y = hitInfo.transform.GetComponent<Piece>().coor_y;
                                         exchange = 1;
                                         Destroy(hitInfo.collider.gameObject);
                                     }
@@ -610,6 +641,9 @@ public class PieceCtrl : MonoBehaviour
 
                                     if (Red_MaMove(gameObj, hitInfo) && (hitInfo.transform.position == gameObj.transform.position))
                                     {
+                                        
+                                        gameObj.GetComponent<Piece>().coor_x = hitInfo.transform.GetComponent<Piece>().coor_x;
+                                        gameObj.GetComponent<Piece>().coor_y = hitInfo.transform.GetComponent<Piece>().coor_y;
                                         exchange = 1;
                                         Destroy(hitInfo.collider.gameObject);
                                     }
@@ -620,6 +654,9 @@ public class PieceCtrl : MonoBehaviour
 
                                     if (Red_XiangMove(gameObj, hitInfo) && (hitInfo.transform.position == gameObj.transform.position))
                                     {
+                                        
+                                        gameObj.GetComponent<Piece>().coor_x = hitInfo.transform.GetComponent<Piece>().coor_x;
+                                        gameObj.GetComponent<Piece>().coor_y = hitInfo.transform.GetComponent<Piece>().coor_y;
                                         exchange = 1;
                                         Destroy(hitInfo.collider.gameObject);
                                     }
@@ -642,6 +679,9 @@ public class PieceCtrl : MonoBehaviour
 
                                         if (Red_CheMove(gameObj, hitInfo) && (hitInfo.transform.position == gameObj.transform.position))
                                         {
+                                            
+                                            gameObj.GetComponent<Piece>().coor_x = hitInfo.transform.GetComponent<Piece>().coor_x;
+                                            gameObj.GetComponent<Piece>().coor_y = hitInfo.transform.GetComponent<Piece>().coor_y;
                                             exchange = 1;
                                             Destroy(hitInfo.collider.gameObject);
                                         }
@@ -652,6 +692,9 @@ public class PieceCtrl : MonoBehaviour
 
                                     if (Red_JiangMove(gameObj, hitInfo) && (hitInfo.transform.position == gameObj.transform.position))
                                     {
+                                        
+                                        gameObj.GetComponent<Piece>().coor_x = hitInfo.transform.GetComponent<Piece>().coor_x;
+                                        gameObj.GetComponent<Piece>().coor_y = hitInfo.transform.GetComponent<Piece>().coor_y;
                                         exchange = 1;
                                         Destroy(hitInfo.collider.gameObject);
                                     }
@@ -674,6 +717,9 @@ public class PieceCtrl : MonoBehaviour
 
                                         if (Red_PaoMove(gameObj, hitInfo) && (hitInfo.transform.position == gameObj.transform.position))
                                         {
+                                            
+                                            gameObj.GetComponent<Piece>().coor_x = hitInfo.transform.GetComponent<Piece>().coor_x;
+                                            gameObj.GetComponent<Piece>().coor_y = hitInfo.transform.GetComponent<Piece>().coor_y;
                                             exchange = 1;
                                             Destroy(hitInfo.collider.gameObject);
                                         }
@@ -681,8 +727,8 @@ public class PieceCtrl : MonoBehaviour
                                     }
                                     break;
                             }
+                            GameObject.Find("Main Camera").GetComponent<PieceManager>().PieceMapArray();
                         }
-
                         break;
                 }
                 //Debug.Log(flag);
@@ -726,6 +772,9 @@ public class PieceCtrl : MonoBehaviour
                                 case "black_bing(Clone)":
                                     if (Black_BingMove(gameObj1, hitInfo) && (hitInfo.transform.position == gameObj1.transform.position))
                                     {
+                                        gameObj1.GetComponent<Piece>().moved = true;
+                                        gameObj1.GetComponent<Piece>().coor_x = int.Parse(hitInfo.transform.name) / 10;
+                                        gameObj1.GetComponent<Piece>().coor_y = int.Parse(hitInfo.transform.name) % 10;
                                         exchange = 0;
                                     }
                                     //Debug.Log(piece_name);
@@ -733,6 +782,9 @@ public class PieceCtrl : MonoBehaviour
                                 case "black_shi(Clone)":
                                     if (Black_ShiMove(gameObj1, hitInfo) && (hitInfo.transform.position == gameObj1.transform.position))
                                     {
+                                        gameObj1.GetComponent<Piece>().moved = true;
+                                        gameObj1.GetComponent<Piece>().coor_x = int.Parse(hitInfo.transform.name) / 10;
+                                        gameObj1.GetComponent<Piece>().coor_y = int.Parse(hitInfo.transform.name) % 10;
                                         exchange = 0;
                                     }
                                     //Debug.Log(piece_name);
@@ -740,6 +792,9 @@ public class PieceCtrl : MonoBehaviour
                                 case "black_ma(Clone)":
                                     if (Black_MaMove(gameObj1, hitInfo) && (hitInfo.transform.position == gameObj1.transform.position))
                                     {
+                                        gameObj1.GetComponent<Piece>().moved = true;
+                                        gameObj1.GetComponent<Piece>().coor_x = int.Parse(hitInfo.transform.name) / 10;
+                                        gameObj1.GetComponent<Piece>().coor_y = int.Parse(hitInfo.transform.name) % 10;
                                         exchange = 0;
                                     }
                                     //Debug.Log(piece_name);
@@ -747,6 +802,9 @@ public class PieceCtrl : MonoBehaviour
                                 case "black_xiang(Clone)":
                                     if (Black_XiangMove(gameObj1, hitInfo) && (hitInfo.transform.position == gameObj1.transform.position))
                                     {
+                                        gameObj1.GetComponent<Piece>().moved = true;
+                                        gameObj1.GetComponent<Piece>().coor_x = int.Parse(hitInfo.transform.name) / 10;
+                                        gameObj1.GetComponent<Piece>().coor_y = int.Parse(hitInfo.transform.name) % 10;
                                         exchange = 0;
                                     }
                                     break;
@@ -767,6 +825,9 @@ public class PieceCtrl : MonoBehaviour
 
                                         if (Black_CheMove(gameObj1, hitInfo) && (hitInfo.transform.position == gameObj1.transform.position))
                                         {
+                                            gameObj1.GetComponent<Piece>().moved = true;
+                                            gameObj1.GetComponent<Piece>().coor_x = int.Parse(hitInfo.transform.name) / 10;
+                                            gameObj1.GetComponent<Piece>().coor_y = int.Parse(hitInfo.transform.name) % 10;
                                             exchange = 0;
                                         }
                                         //Debug.Log(piece_name);
@@ -776,6 +837,9 @@ public class PieceCtrl : MonoBehaviour
                                     if (Black_JiangMove(gameObj1, hitInfo))
                                     {
 
+                                        gameObj1.GetComponent<Piece>().moved = true;
+                                        gameObj1.GetComponent<Piece>().coor_x = int.Parse(hitInfo.transform.name) / 10;
+                                        gameObj1.GetComponent<Piece>().coor_y = int.Parse(hitInfo.transform.name) % 10;
                                         exchange = 0;
                                     }
                                     //Debug.Log(piece_name);
@@ -797,13 +861,18 @@ public class PieceCtrl : MonoBehaviour
 
                                         if (Black_PaoMove(gameObj1, hitInfo) && (hitInfo.transform.position == gameObj1.transform.position))
                                         {
+                                            gameObj1.GetComponent<Piece>().moved = true;
+                                            gameObj1.GetComponent<Piece>().coor_x = int.Parse(hitInfo.transform.name) / 10;
+                                            gameObj1.GetComponent<Piece>().coor_y = int.Parse(hitInfo.transform.name) % 10;
                                             exchange = 0;
                                         }
                                         //Debug.Log(piece_name);
                                     }
                                     break;
                             }
+
                         }
+                        GameObject.Find("Main Camera").GetComponent<PieceManager>().PieceMapArray();
                         break;
                     //如果为敌对棋子，Destroy棋子然后移动
                     case "RedPiece":
@@ -821,6 +890,9 @@ public class PieceCtrl : MonoBehaviour
 
                                         if (Black_BingMove(gameObj1, hitInfo) && (hitInfo.transform.position == gameObj1.transform.position))
                                         {
+                                            gameObj1.GetComponent<Piece>().moved = true;
+                                            gameObj1.GetComponent<Piece>().coor_x = hitInfo.transform.GetComponent<Piece>().coor_x;
+                                            gameObj1.GetComponent<Piece>().coor_y = hitInfo.transform.GetComponent<Piece>().coor_y;
                                             exchange = 0;
                                             Destroy(hitInfo.collider.gameObject);
                                         }
@@ -831,6 +903,9 @@ public class PieceCtrl : MonoBehaviour
 
                                     if (Black_ShiMove(gameObj1, hitInfo) && (hitInfo.transform.position == gameObj1.transform.position))
                                     {
+                                        gameObj1.GetComponent<Piece>().moved = true;
+                                        gameObj1.GetComponent<Piece>().coor_x = hitInfo.transform.GetComponent<Piece>().coor_x;
+                                        gameObj1.GetComponent<Piece>().coor_y = hitInfo.transform.GetComponent<Piece>().coor_y;
                                         exchange = 0;
                                         Destroy(hitInfo.collider.gameObject);
                                     }
@@ -840,6 +915,9 @@ public class PieceCtrl : MonoBehaviour
 
                                     if (Black_MaMove(gameObj1, hitInfo) && (hitInfo.transform.position == gameObj1.transform.position))
                                     {
+                                        gameObj1.GetComponent<Piece>().moved = true;
+                                        gameObj1.GetComponent<Piece>().coor_x = hitInfo.transform.GetComponent<Piece>().coor_x;
+                                        gameObj1.GetComponent<Piece>().coor_y = hitInfo.transform.GetComponent<Piece>().coor_y;
                                         exchange = 0;
                                         Destroy(hitInfo.collider.gameObject);
                                     }
@@ -849,6 +927,9 @@ public class PieceCtrl : MonoBehaviour
 
                                     if (Black_XiangMove(gameObj1, hitInfo) && (hitInfo.transform.position == gameObj1.transform.position))
                                     {
+                                        gameObj1.GetComponent<Piece>().moved = true;
+                                        gameObj1.GetComponent<Piece>().coor_x = hitInfo.transform.GetComponent<Piece>().coor_x;
+                                        gameObj1.GetComponent<Piece>().coor_y = hitInfo.transform.GetComponent<Piece>().coor_y;
                                         exchange = 0;
                                         Destroy(hitInfo.collider.gameObject);
                                     }
@@ -871,6 +952,9 @@ public class PieceCtrl : MonoBehaviour
 
                                         if (Black_CheMove(gameObj1, hitInfo) && (hitInfo.transform.position == gameObj1.transform.position))
                                         {
+                                            gameObj1.GetComponent<Piece>().moved = true;
+                                            gameObj1.GetComponent<Piece>().coor_x = hitInfo.transform.GetComponent<Piece>().coor_x;
+                                            gameObj1.GetComponent<Piece>().coor_y = hitInfo.transform.GetComponent<Piece>().coor_y;
                                             exchange = 0;
                                             Destroy(hitInfo.collider.gameObject);
                                         }
@@ -882,6 +966,9 @@ public class PieceCtrl : MonoBehaviour
 
                                     if (Black_JiangMove(gameObj1, hitInfo) && (hitInfo.transform.position == gameObj1.transform.position))
                                     {
+                                        gameObj1.GetComponent<Piece>().moved = true;
+                                        gameObj1.GetComponent<Piece>().coor_x = hitInfo.transform.GetComponent<Piece>().coor_x;
+                                        gameObj1.GetComponent<Piece>().coor_y = hitInfo.transform.GetComponent<Piece>().coor_y;
                                         exchange = 0;
                                         Destroy(hitInfo.collider.gameObject);
                                     }
@@ -904,6 +991,9 @@ public class PieceCtrl : MonoBehaviour
 
                                         if (Black_PaoMove(gameObj1, hitInfo) && (hitInfo.transform.position == gameObj1.transform.position))
                                         {
+                                            gameObj1.GetComponent<Piece>().moved = true;
+                                            gameObj1.GetComponent<Piece>().coor_x = int.Parse(hitInfo.transform.name) / 10;
+                                            gameObj1.GetComponent<Piece>().coor_y = int.Parse(hitInfo.transform.name) % 10;
                                             exchange = 0;
                                             Destroy(hitInfo.collider.gameObject);
                                         }
@@ -912,7 +1002,7 @@ public class PieceCtrl : MonoBehaviour
                                     break;
                             }
                         }
-
+                        GameObject.Find("Main Camera").GetComponent<PieceManager>().PieceMapArray();
                         break;
                 }
                 //Debug.Log(flag);

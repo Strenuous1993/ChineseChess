@@ -6,6 +6,7 @@ using UnityEngine;
 public class AI : MonoBehaviour {
 
 	// Use this for initialization
+    public Piece[,] status = new Piece[10, 9];
 	void Start () {
 		
 	}
@@ -18,8 +19,8 @@ public class AI : MonoBehaviour {
         }
 	}
 
-    int AlphaBeta()
-    {
-        return b;
-    }
+    //int AlphaBeta()
+    //{
+    //    //return b;
+    //}
 }

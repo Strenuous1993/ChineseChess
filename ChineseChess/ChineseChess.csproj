@@ -241,6 +241,7 @@
     <Compile Include="Assets\03.Scripts\ByteBuffer.cs" />
     <Compile Include="Assets\03.Scripts\MyGizmo.cs" />
     <Compile Include="Assets\03.Scripts\NetworkMgr.cs" />
+    <Compile Include="Assets\03.Scripts\Piece.cs" />
     <Compile Include="Assets\03.Scripts\PieceCtrl.cs" />
     <Compile Include="Assets\03.Scripts\PieceCtrl1.cs" />
     <Compile Include="Assets\03.Scripts\PieceManager.cs" />
