@@ -15,6 +15,8 @@ public class PieceCtrl : MonoBehaviour
     private Transform tran_red;
     private Transform tran_black;
     static public int exchange = 0;
+
+    List<GameObject[,]> all_next_move = new List<GameObject[,]>();
     void move()
     {
 
@@ -25,17 +27,18 @@ public class PieceCtrl : MonoBehaviour
         }
         else
         {
-            Black_Move();
+            AI.ABMaxMin(PieceManager.piece_array, 1, 3, double.NegativeInfinity, double.PositiveInfinity);
+            PieceManager.piece_array = (GameObject[,])AI.best_move.Clone();
+            PieceManager.UpdatePiece();
+            PieceManager.ArrayMapPiece();
+            exchange = 0;
         }
 
     }
 
     void Update()
-    {
-
+    { 
         move();
-
-
     }
     //兵的移动逻辑。棋子的移动逻辑定义为bool类型，在下面用来判断是否执行，执行则吃掉对方棋子。
     bool Red_BingMove(GameObject chess, RaycastHit hit)

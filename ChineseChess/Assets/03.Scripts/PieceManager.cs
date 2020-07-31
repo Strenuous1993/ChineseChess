@@ -131,30 +131,49 @@ public class PieceManager : MonoBehaviour
     //遍历棋盘，将棋子放到对应棋盘数组下标位置上
     public void PieceMapArray()
     {
-        List<Transform> lst = new List<Transform>();
+        for (int i = 0; i < 10; i++)
+        {
+            for (int j = 0; j < 9; j++)
+            {
+                piece_array[i, j] = null;
+            }
+        }
         foreach (Transform child in GameObject.Find("Coordinates").transform)
         {
             if (child.transform.tag == "BlackPiece" || child.transform.tag == "RedPiece")
             {
-                GameObject temp = GameObject.Find(child.name);
+                GameObject temp = child.gameObject;
                 piece_array[child.GetComponent<Piece>().coor_x, child.GetComponent<Piece>().coor_y] = temp;
             }
         }
     }
 
     //根据棋盘数组改变场景中棋子的位置
-    public void ArrayMapPiece()
+    static public void ArrayMapPiece()
     {
-        foreach (GameObject gameObject in piece_array)
+        foreach (Transform child in GameObject.Find("Coordinates").transform)
         {
-            if (gameObject != null && gameObject.GetComponent<Piece>().moved)
+            if (child.transform.tag == "BlackPiece" || child.transform.tag == "RedPiece")
             {
-                int x = gameObject.GetComponent<Piece>().coor_x;
-                int y = gameObject.GetComponent<Piece>().coor_y;
-                string dec = x.ToString();
-                string unit = y.ToString();
-                GameObject coord = GameObject.Find(dec + unit);
-                gameObject.transform.localPosition = coord.transform.localPosition;
+                foreach (GameObject gameObject in PieceManager.piece_array)
+
+                {
+                    if ( gameObject != null && child.gameObject.GetComponent<Piece>().piece_id == gameObject.GetComponent<Piece>().piece_id)
+                    {
+                        int x = gameObject.GetComponent<Piece>().coor_x;
+                        int y = gameObject.GetComponent<Piece>().coor_y;
+                        string dec = x.ToString();
+                        string unit = y.ToString();
+                        GameObject coord = GameObject.Find(dec + unit);
+                        child.transform.localPosition = coord.transform.localPosition;
+                        child.gameObject.GetComponent<Piece>().is_destory = false;
+                        break;
+                    }
+                }
+                if(child.gameObject.GetComponent<Piece>().is_destory == true)
+                {
+                    Destroy(child.gameObject);
+                }
             }
         }
     }
@@ -173,7 +192,7 @@ public class PieceManager : MonoBehaviour
     }
 
     //棋力静态评估函数
-    static public double PiecePower()
+    static public double PiecePower(GameObject[,] piece_array)
     {
         int attack_power_red = 0;
         int power_red = 0;
@@ -184,13 +203,13 @@ public class PieceManager : MonoBehaviour
         {
             if (gameObject != null && gameObject.transform.tag == "RedPiece")
             {
-                power_red += gameObject.GetComponent<Piece>().piece_power;
-                attack_power_red += gameObject.GetComponent<Piece>().piece_attack_power;
+                power_red -= gameObject.GetComponent<Piece>().piece_power;
+                attack_power_red -= gameObject.GetComponent<Piece>().piece_attack_power;
             }
             else if (gameObject != null && gameObject.transform.tag == "BlackPiece")
             {
-                power_black -= gameObject.GetComponent<Piece>().piece_power;
-                attack_power_black -= gameObject.GetComponent<Piece>().piece_attack_power;
+                power_black += gameObject.GetComponent<Piece>().piece_power;
+                attack_power_black += gameObject.GetComponent<Piece>().piece_attack_power;
             }
         }
         System.Random rd = new System.Random();
@@ -198,10 +217,931 @@ public class PieceManager : MonoBehaviour
         return total_power;
     }
 
-    static public void GetAllMove(GameObject[,] piece_array ,List<GameObject[,]> all_next_move)
+    //获得黑方所有的moves
+    static public void GetAllBlackMoves(GameObject[,] piece_array, List<GameObject[,]> all_next_move)
     {
+        foreach (GameObject gameObject in piece_array)
+        {
+            GameObject[,] temp = new GameObject[10, 9];
 
+            if (gameObject != null)
+            {
+                int x = gameObject.GetComponent<Piece>().coor_x;
+                int y = gameObject.GetComponent<Piece>().coor_y;
+                switch (gameObject.transform.name)
+                {
+                    case "black_bing(Clone)":
+                        {
+                            if (x < 5 && (piece_array[x + 1, y] == null || piece_array[x + 1, y].transform.tag == "RedPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x + 1, y] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+                            if (x >= 5 && x + 1 < 10 && (piece_array[x + 1, y] == null || piece_array[x + 1, y].transform.tag == "RedPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x + 1, y] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+                            if (x >= 5 && y - 1 > -1 && (piece_array[x, y - 1] == null || piece_array[x, y - 1].transform.tag == "RedPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x, y - 1] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+                            if (x >= 5 && y + 1 < 9 && (piece_array[x, y + 1] == null || piece_array[x, y + 1].transform.tag == "RedPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x, y + 1] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+                            break;
+                        }
+                    case "black_che(Clone)":
+                        {
+                            for (int i = x + 1; i < 10; i++)
+                            {
+                                if (piece_array[i, y] == null)
+                                {
+                                    temp = (GameObject[,])piece_array.Clone();
+                                    temp[i, y] = temp[x, y];
+                                    temp[x, y] = null;
+                                    all_next_move.Add(temp);
+                                }
+                                else if (piece_array[i, y] != null && piece_array[i, y].transform.tag == "RedPiece")
+                                {
+                                    temp = (GameObject[,])piece_array.Clone();
+                                    temp[i, y] = temp[x, y];
+                                    temp[x, y] = null;
+                                    all_next_move.Add(temp);
+                                    break;
+                                }
+                                else if (piece_array[i, y] != null && piece_array[i, y].transform.tag == "BlackPiece")
+                                {
+                                    break;
+                                }
+
+                            }
+
+                            for (int i = x - 1; i >= 0; i--)
+                            {
+                                if (piece_array[i, y] == null)
+                                {
+                                    temp = (GameObject[,])piece_array.Clone();
+                                    temp[i, y] = temp[x, y];
+                                    temp[x, y] = null;
+                                    all_next_move.Add(temp);
+                                }
+                                else if (piece_array[i, y] != null && piece_array[i, y].transform.tag == "RedPiece")
+                                {
+                                    temp = (GameObject[,])piece_array.Clone();
+                                    temp[i, y] = temp[x, y];
+                                    temp[x, y] = null;
+                                    all_next_move.Add(temp);
+                                    break;
+                                }
+                                else if (piece_array[i, y] != null && piece_array[i, y].transform.tag == "BlackPiece")
+                                {
+                                    break;
+                                }
+                            }
+
+                            for (int i = y + 1; i < 9; i++)
+                            {
+                                if (piece_array[x, i] == null)
+                                {
+                                    temp = (GameObject[,])piece_array.Clone();
+                                    temp[x, i] = temp[x, y];
+                                    temp[x, y] = null;
+                                    all_next_move.Add(temp);
+                                }
+                                else if (piece_array[x, i] != null && piece_array[x, i].transform.tag == "RedPiece")
+                                {
+                                    temp = (GameObject[,])piece_array.Clone();
+                                    temp[x, i] = temp[x, y];
+                                    temp[x, y] = null;
+                                    all_next_move.Add(temp);
+                                    break;
+                                }
+                                else if (piece_array[x, i] != null && piece_array[x, i].transform.tag == "BlackPiece")
+                                {
+                                    break;
+                                }
+                            }
+
+                            for (int i = y - 1; i >= 0; i--)
+                            {
+                                if (piece_array[x, i] == null)
+                                {
+                                    temp = (GameObject[,])piece_array.Clone();
+                                    temp[x, i] = temp[x, y];
+                                    temp[x, y] = null;
+                                    all_next_move.Add(temp);
+                                }
+                                else if (piece_array[x, i] != null && piece_array[x, i].transform.tag == "RedPiece")
+                                {
+                                    temp = (GameObject[,])piece_array.Clone();
+                                    temp[x, i] = temp[x, y];
+                                    temp[x, y] = null;
+                                    all_next_move.Add(temp);
+                                    break;
+                                }
+                                else if (piece_array[x, i] != null && piece_array[x, i].transform.tag == "BlackPiece")
+                                {
+                                    break;
+                                }
+                            }
+                            break;
+                        }
+                    case "black_jiang(Clone)":
+                        {
+                            if (x - 1 > -1 && (piece_array[x - 1, y] == null || piece_array[x - 1, y].transform.tag == "RedPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x - 1, y] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+
+                            if (x + 1 < 3 && (piece_array[x + 1, y] == null || piece_array[x + 1, y].transform.tag == "RedPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x + 1, y] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+
+                            if (y - 1 > 2 && (piece_array[x, y - 1] == null || piece_array[x, y - 1].transform.tag == "RedPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x, y - 1] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+                            if (y + 1 < 6 && (piece_array[x, y + 1] == null || piece_array[x, y + 1].transform.tag == "RedPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x, y + 1] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+                            break;
+                        }
+                    case "black_ma(Clone)":
+                        {
+                            if (x - 2 > -1 && y + 1 < 9 && piece_array[x - 1, y] == null && (piece_array[x - 2, y + 1] == null || piece_array[x - 2, y + 1].transform.tag == "RedPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x - 2, y + 1] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+                            if (x - 2 > -1 && y - 1 > -1 && piece_array[x - 1, y] == null && (piece_array[x - 2, y - 1] == null || piece_array[x - 2, y - 1].transform.tag == "RedPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x - 2, y - 1] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+                            if (x + 2 < 10 && y + 1 < 9 && piece_array[x + 1, y] == null && (piece_array[x + 2, y + 1] == null || piece_array[x + 2, y + 1].transform.tag == "RedPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x + 2, y + 1] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+                            if (x + 2 < 10 && y - 1 > -1 && piece_array[x + 1, y] == null && (piece_array[x + 2, y - 1] == null || piece_array[x + 2, y - 1].transform.tag == "RedPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x + 2, y - 1] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+                            if (x - 1 > -1 && y + 2 < 9 && piece_array[x, y + 1] == null && (piece_array[x - 1, y + 2] == null || piece_array[x - 1, y + 2].transform.tag == "RedPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x - 1, y + 2] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+
+                            if (x + 1 < 10 && y + 2 < 9 && piece_array[x, y + 1] == null && (piece_array[x + 1, y + 2] == null || piece_array[x + 1, y + 2].transform.tag == "RedPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x + 1, y + 2] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+                            if (x - 1 > -1 && y - 2 > -1 && piece_array[x, y - 1] == null && (piece_array[x - 1, y - 2] == null || piece_array[x - 1, y - 2].transform.tag == "RedPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x - 1, y - 2] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+                            if (x + 1 < 10 && y - 2 > -1 && piece_array[x, y - 1] == null && (piece_array[x + 1, y - 2] == null || piece_array[x + 1, y - 2].transform.tag == "RedPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x + 1, y - 2] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+                            break;
+                        }
+                    case "black_shi(Clone)":
+                        {
+                            if (x - 1 > -1 && y - 1 > 2 && (piece_array[x - 1, y - 1] == null || piece_array[x - 1, y - 1].transform.tag == "RedPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x - 1, y - 1] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+                            if (x - 1 > -1 && y + 1 < 6 && (piece_array[x - 1, y + 1] == null || piece_array[x - 1, y + 1].transform.tag == "RedPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x - 1, y + 1] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+                            if (x + 1 < 3 && y - 1 > 2 && (piece_array[x + 1, y - 1] == null || piece_array[x + 1, y - 1].transform.tag == "RedPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x + 1, y - 1] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+                            if (x + 1 < 3 && y + 1 < 6 && (piece_array[x + 1, y + 1] == null || piece_array[x + 1, y + 1].transform.tag == "RedPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x + 1, y + 1] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+                            break;
+                        }
+                    case "black_xiang(Clone)":
+                        {
+                            if (x - 2 > -1 && y - 2 > -1 && piece_array[x - 1, y - 1] == null && (piece_array[x - 2, y - 2] == null || piece_array[x - 2, y - 2].transform.tag == "RedPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x - 2, y - 2] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+
+                            if (x - 2 > -1 && y + 2 < 9 && piece_array[x - 1, y + 1] == null && (piece_array[x - 2, y + 2] == null || piece_array[x - 2, y + 2].transform.tag == "RedPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x - 2, y + 2] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+
+                            if (x + 2 < 5 && y - 2 > -1 && piece_array[x + 1, y - 1] == null && (piece_array[x + 2, y - 2] == null || piece_array[x + 2, y - 2].transform.tag == "RedPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x + 2, y - 2] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+
+                            if (x + 2 < 5 && y + 2 < 9 && piece_array[x + 1, y + 1] == null && (piece_array[x + 2, y + 2] == null || piece_array[x + 2, y + 2].transform.tag == "RedPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x + 2, y + 2] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+                            break;
+                        }
+                    case "black_pao(Clone)":
+                        {
+                            bool first_piece_black = false;
+                            for (int i = x + 1; i < 10; i++)
+                            {
+                                if (piece_array[i, y] == null && first_piece_black == false)
+                                {
+                                    temp = (GameObject[,])piece_array.Clone();
+                                    temp[i, y] = temp[x, y];
+                                    temp[x, y] = null;
+                                    all_next_move.Add(temp);
+                                    continue;
+                                }
+                                else if (piece_array[i, y] == null && first_piece_black == true)
+                                {
+                                    continue;
+                                }
+                                else if (first_piece_black == false && piece_array[i, y] != null)
+                                {
+                                    first_piece_black = true;
+                                    continue;
+                                }
+                                else if (first_piece_black == true && piece_array[i, y] != null && piece_array[i, y].transform.tag == "RedPiece")
+                                {
+                                    temp = (GameObject[,])piece_array.Clone();
+                                    temp[i, y] = temp[x, y];
+                                    temp[x, y] = null;
+                                    all_next_move.Add(temp);
+                                    first_piece_black = false;
+                                    break;
+                                }
+                                else if (first_piece_black == true && piece_array[i, y] != null && piece_array[i, y].transform.tag == "BlackjPiece")
+                                {
+                                    first_piece_black = false;
+                                    break;
+                                }
+                            }
+                            first_piece_black = false;
+                            for (int i = x - 1; i >= 0; i--)
+                            {
+                                if (piece_array[i, y] == null && first_piece_black == false)
+                                {
+                                    temp = (GameObject[,])piece_array.Clone();
+                                    temp[i, y] = temp[x, y];
+                                    temp[x, y] = null;
+                                    all_next_move.Add(temp);
+                                    continue;
+                                }
+                                else if (piece_array[i, y] == null && first_piece_black == true)
+                                {
+                                    continue;
+                                }
+                                else if (first_piece_black == false && piece_array[i, y] != null)
+                                {
+                                    first_piece_black = true;
+                                    continue;
+                                }
+                                else if (first_piece_black == true && piece_array[i, y] != null && piece_array[i, y].transform.tag == "RedPiece")
+                                {
+                                    temp = (GameObject[,])piece_array.Clone();
+                                    temp[i, y] = temp[x, y];
+                                    temp[x, y] = null;
+                                    all_next_move.Add(temp);
+                                    first_piece_black = false;
+                                    break;
+                                }
+                                else if (first_piece_black == true && piece_array[i, y] != null && piece_array[i, y].transform.tag == "BlackjPiece")
+                                {
+                                    first_piece_black = false;
+                                    break;
+                                }
+                            }
+                            first_piece_black = false;
+
+                            for (int i = y + 1; i < 9; i++)
+                            {
+                                if (piece_array[x, i] == null && first_piece_black == false)
+                                {
+                                    temp = (GameObject[,])piece_array.Clone();
+                                    temp[x, i] = temp[x, y];
+                                    temp[x, y] = null;
+                                    all_next_move.Add(temp);
+                                    continue;
+                                }
+                                else if (piece_array[x, i] == null && first_piece_black == true)
+                                {
+                                    continue;
+                                }
+                                else if (first_piece_black == false && piece_array[x, i] != null)
+                                {
+                                    first_piece_black = true;
+                                    continue;
+                                }
+                                else if (first_piece_black == true && piece_array[x, i] != null && piece_array[x, i].transform.tag == "RedPiece")
+                                {
+                                    temp = (GameObject[,])piece_array.Clone();
+                                    temp[x, i] = temp[x, y];
+                                    temp[x, y] = null;
+                                    all_next_move.Add(temp);
+                                    first_piece_black = false;
+                                    break;
+                                }
+                                else if (first_piece_black == true && piece_array[x, i] != null && piece_array[x, i].transform.tag == "BlackjPiece")
+                                {
+                                    first_piece_black = false;
+                                    break;
+                                }
+                            }
+                            first_piece_black = false;
+
+                            for (int i = y - 1; i >= 0; i--)
+                            {
+                                if (piece_array[x, i] == null && first_piece_black == false)
+                                {
+                                    temp = (GameObject[,])piece_array.Clone();
+                                    temp[x, i] = temp[x, y];
+                                    temp[x, y] = null;
+                                    all_next_move.Add(temp);
+                                    continue;
+                                }
+                                else if (piece_array[x, i] == null && first_piece_black == true)
+                                {
+                                    continue;
+                                }
+                                else if (first_piece_black == false && piece_array[x, i] != null)
+                                {
+                                    first_piece_black = true;
+                                    continue;
+                                }
+                                else if (first_piece_black == true && piece_array[x, i] != null && piece_array[x, i].transform.tag == "RedPiece")
+                                {
+                                    temp = (GameObject[,])piece_array.Clone();
+                                    temp[x, i] = temp[x, y];
+                                    temp[x, y] = null;
+                                    all_next_move.Add(temp);
+                                    first_piece_black = false;
+                                    break;
+                                }
+                                else if (first_piece_black == true && piece_array[x, i] != null && piece_array[x, i].transform.tag == "BlackjPiece")
+                                {
+                                    first_piece_black = false;
+                                    break;
+                                }
+                            }
+                            break;
+                        }
+                }
+            }
+        }
     }
 
 
+    //获得红方所有的moves
+    static public void GetAllRedMoves(GameObject[,] piece_array, List<GameObject[,]> all_next_move)
+    {
+        foreach (GameObject gameObject in piece_array)
+        {
+            GameObject[,] temp = new GameObject[10, 9];
+
+            if (gameObject != null)
+            {
+                int x = gameObject.GetComponent<Piece>().coor_x;
+                int y = gameObject.GetComponent<Piece>().coor_y;
+                switch (gameObject.transform.name)
+                {
+                    case "red_bing(Clone)":
+                        {
+                            if (x > 4 && (piece_array[x - 1, y] == null || piece_array[x - 1, y].transform.tag == "BlackPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x - 1, y] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+                            if (x <= 4 && x + 1 < 10 && (piece_array[x - 1, y] == null || piece_array[x - 1, y].transform.tag == "BlackPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x - 1, y] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+                            if (x <= 4 && y - 1 > -1 && (piece_array[x, y - 1] == null || piece_array[x, y - 1].transform.tag == "BlackPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x, y - 1] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+                            if (x <= 4 && y + 1 < 9 && (piece_array[x, y + 1] == null || piece_array[x, y + 1].transform.tag == "BlackPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x, y + 1] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+                            break;
+                        }
+                    case "red_che(Clone)":
+                        {
+                            for (int i = x + 1; i < 10; i++)
+                            {
+                                if (piece_array[i, y] == null)
+                                {
+                                    temp = (GameObject[,])piece_array.Clone();
+                                    temp[i, y] = temp[x, y];
+                                    temp[x, y] = null;
+                                    all_next_move.Add(temp);
+                                }
+                                else if (piece_array[i, y] != null && piece_array[i, y].transform.tag == "BlackPiece")
+                                {
+                                    temp = (GameObject[,])piece_array.Clone();
+                                    temp[i, y] = temp[x, y];
+                                    temp[x, y] = null;
+                                    all_next_move.Add(temp);
+                                    break;
+                                }
+                                else if (piece_array[i, y] != null && piece_array[i, y].transform.tag == "RedPiece")
+                                {
+                                    break;
+                                }
+
+                            }
+
+                            for (int i = x - 1; i >= 0; i--)
+                            {
+                                if (piece_array[i, y] == null)
+                                {
+                                    temp = (GameObject[,])piece_array.Clone();
+                                    temp[i, y] = temp[x, y];
+                                    temp[x, y] = null;
+                                    all_next_move.Add(temp);
+                                }
+                                else if (piece_array[i, y] != null && piece_array[i, y].transform.tag == "BlackPiece")
+                                {
+                                    temp = (GameObject[,])piece_array.Clone();
+                                    temp[i, y] = temp[x, y];
+                                    temp[x, y] = null;
+                                    all_next_move.Add(temp);
+                                    break;
+                                }
+                                else if (piece_array[i, y] != null && piece_array[i, y].transform.tag == "RedPiece")
+                                {
+                                    break;
+                                }
+                            }
+
+                            for (int i = y + 1; i < 9; i++)
+                            {
+                                if (piece_array[x, i] == null)
+                                {
+                                    temp = (GameObject[,])piece_array.Clone();
+                                    temp[x, i] = temp[x, y];
+                                    temp[x, y] = null;
+                                    all_next_move.Add(temp);
+                                }
+                                else if (piece_array[x, i] != null && piece_array[x, i].transform.tag == "BlackPiece")
+                                {
+                                    temp = (GameObject[,])piece_array.Clone();
+                                    temp[x, i] = temp[x, y];
+                                    temp[x, y] = null;
+                                    all_next_move.Add(temp);
+                                    break;
+                                }
+                                else if (piece_array[x, i] != null && piece_array[x, i].transform.tag == "RedPiece")
+                                {
+                                    break;
+                                }
+                            }
+
+                            for (int i = y - 1; i >= 0; i--)
+                            {
+                                if (piece_array[x, i] == null)
+                                {
+                                    temp = (GameObject[,])piece_array.Clone();
+                                    temp[x, i] = temp[x, y];
+                                    temp[x, y] = null;
+                                    all_next_move.Add(temp);
+                                }
+                                else if (piece_array[x, i] != null && piece_array[x, i].transform.tag == "BlackPiece")
+                                {
+                                    temp = (GameObject[,])piece_array.Clone();
+                                    temp[x, i] = temp[x, y];
+                                    temp[x, y] = null;
+                                    all_next_move.Add(temp);
+                                    break;
+                                }
+                                else if (piece_array[x, i] != null && piece_array[x, i].transform.tag == "RedPiece")
+                                {
+                                    break;
+                                }
+                            }
+                            break;
+                        }
+                    case "red_jiang(Clone)":
+                        {
+                            if (x - 1 > 6 && (piece_array[x - 1, y] == null || piece_array[x - 1, y].transform.tag == "BlackPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x - 1, y] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+
+                            if (x + 1 < 10 && (piece_array[x + 1, y] == null || piece_array[x + 1, y].transform.tag == "BlackPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x + 1, y] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+
+                            if (y - 1 > 2 && (piece_array[x, y - 1] == null || piece_array[x, y - 1].transform.tag == "BlackPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x, y - 1] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+                            if (y + 1 < 6 && (piece_array[x, y + 1] == null || piece_array[x, y + 1].transform.tag == "BlackPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x, y + 1] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+                            break;
+                        }
+                    case "red_ma(Clone)":
+                        {
+                            if (x - 2 > -1 && y + 1 < 9 && piece_array[x - 1, y] == null && (piece_array[x - 2, y + 1] == null || piece_array[x - 2, y + 1].transform.tag == "BlackPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x - 2, y + 1] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+                            if (x - 2 > -1 && y - 1 > -1 && piece_array[x - 1, y] == null && (piece_array[x - 2, y - 1] == null || piece_array[x - 2, y - 1].transform.tag == "BlackPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x - 2, y - 1] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+                            if (x + 2 < 10 && y + 1 < 9 && piece_array[x + 1, y] == null && (piece_array[x + 2, y + 1] == null || piece_array[x + 2, y + 1].transform.tag == "BlackPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x + 2, y + 1] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+                            if (x + 2 < 10 && y - 1 > -1 && piece_array[x + 1, y] == null && (piece_array[x + 2, y - 1] == null || piece_array[x + 2, y - 1].transform.tag == "BlackPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x + 2, y - 1] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+                            if (x - 1 > -1 && y + 2 < 9 && piece_array[x, y + 1] == null && (piece_array[x - 1, y + 2] == null || piece_array[x - 1, y + 2].transform.tag == "BlackPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x - 1, y + 2] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+
+                            if (x + 1 < 10 && y + 2 < 9 && piece_array[x, y + 1] == null && (piece_array[x + 1, y + 2] == null || piece_array[x + 1, y + 2].transform.tag == "BlackPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x + 1, y + 2] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+                            if (x - 1 > -1 && y - 2 > -1 && piece_array[x, y - 1] == null && (piece_array[x - 1, y - 2] == null || piece_array[x - 1, y - 2].transform.tag == "BlackPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x - 1, y - 2] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+                            if (x + 1 < 10 && y - 2 > -1 && piece_array[x, y - 1] == null && (piece_array[x + 1, y - 2] == null || piece_array[x + 1, y - 2].transform.tag == "BlackPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x + 1, y - 2] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+                            break;
+                        }
+                    case "red_shi(Clone)":
+                        {
+                            if (x - 1 > 6 && y - 1 > 2 && (piece_array[x - 1, y - 1] == null || piece_array[x - 1, y - 1].transform.tag == "BlackPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x - 1, y - 1] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+                            if (x - 1 > 6 && y + 1 < 6 && (piece_array[x - 1, y + 1] == null || piece_array[x - 1, y + 1].transform.tag == "BlackPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x - 1, y + 1] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+                            if (x + 1 < 10 && y - 1 > 2 && (piece_array[x + 1, y - 1] == null || piece_array[x + 1, y - 1].transform.tag == "BlackPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x + 1, y - 1] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+                            if (x + 1 < 10 && y + 1 < 6 && (piece_array[x + 1, y + 1] == null || piece_array[x + 1, y + 1].transform.tag == "BlackPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x + 1, y + 1] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+                            break;
+                        }
+                    case "red_xiang(Clone)":
+                        {
+                            if (x - 2 > 4 && y - 2 > -1 && piece_array[x - 1, y - 1] == null && (piece_array[x - 2, y - 2] == null || piece_array[x - 2, y - 2].transform.tag == "RedPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x - 2, y - 2] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+
+                            if (x - 2 > 4 && y + 2 < 9 && piece_array[x - 1, y + 1] == null && (piece_array[x - 2, y + 2] == null || piece_array[x - 2, y + 2].transform.tag == "RedPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x - 2, y + 2] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+
+                            if (x + 2 < 10 && y - 2 > -1 && piece_array[x + 1, y - 1] == null && (piece_array[x + 2, y - 2] == null || piece_array[x + 2, y - 2].transform.tag == "RedPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x + 2, y - 2] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+
+                            if (x + 2 < 10 && y + 2 < 9 && piece_array[x + 1, y + 1] == null && (piece_array[x + 2, y + 2] == null || piece_array[x + 2, y + 2].transform.tag == "RedPiece"))
+                            {
+                                temp = (GameObject[,])piece_array.Clone();
+                                temp[x + 2, y + 2] = temp[x, y];
+                                temp[x, y] = null;
+                                all_next_move.Add(temp);
+                            }
+                            break;
+                        }
+                    case "red_pao(Clone)":
+                        {
+                            bool first_piece_black = false;
+                            for (int i = x + 1; i < 10; i++)
+                            {
+                                if (piece_array[i, y] == null && first_piece_black == false)
+                                {
+                                    temp = (GameObject[,])piece_array.Clone();
+                                    temp[i, y] = temp[x, y];
+                                    temp[x, y] = null;
+                                    all_next_move.Add(temp);
+                                    continue;
+                                }
+                                else if (piece_array[i, y] == null && first_piece_black == true)
+                                {
+                                    continue;
+                                }
+                                else if (first_piece_black == false && piece_array[i, y] != null)
+                                {
+                                    first_piece_black = true;
+                                    continue;
+                                }
+                                else if (first_piece_black == true && piece_array[i, y] != null && piece_array[i, y].transform.tag == "BlackPiece")
+                                {
+                                    temp = (GameObject[,])piece_array.Clone();
+                                    temp[i, y] = temp[x, y];
+                                    temp[x, y] = null;
+                                    all_next_move.Add(temp);
+                                    first_piece_black = false;
+                                    break;
+                                }
+                                else if (first_piece_black == true && piece_array[i, y] != null && piece_array[i, y].transform.tag == "RedPiece")
+                                {
+                                    first_piece_black = false;
+                                    break;
+                                }
+
+                            }
+                            first_piece_black = false;
+
+                            for (int i = x - 1; i >= 0; i--)
+                            {
+                                if (piece_array[i, y] == null && first_piece_black == false)
+                                {
+                                    temp = (GameObject[,])piece_array.Clone();
+                                    temp[i, y] = temp[x, y];
+                                    temp[x, y] = null;
+                                    all_next_move.Add(temp);
+                                    continue;
+                                }
+                                else if (piece_array[i, y] == null && first_piece_black == true)
+                                {
+                                    continue;
+                                }
+                                else if (first_piece_black == false && piece_array[i, y] != null)
+                                {
+                                    first_piece_black = true;
+                                    continue;
+                                }
+                                else if (first_piece_black == true && piece_array[i, y] != null && piece_array[i, y].transform.tag == "BlackPiece")
+                                {
+                                    temp = (GameObject[,])piece_array.Clone();
+                                    temp[i, y] = temp[x, y];
+                                    temp[x, y] = null;
+                                    all_next_move.Add(temp);
+                                    first_piece_black = false;
+                                    break;
+                                }
+                                else if (first_piece_black == true && piece_array[i, y] != null && piece_array[i, y].transform.tag == "RedPiece")
+                                {
+                                    first_piece_black = false;
+                                    break;
+                                }
+                            }
+                            first_piece_black = false;
+
+                            for (int i = y + 1; i < 9; i++)
+                            {
+                                if (piece_array[x, i] == null && first_piece_black == false)
+                                {
+                                    temp = (GameObject[,])piece_array.Clone();
+                                    temp[x, i] = temp[x, y];
+                                    temp[x, y] = null;
+                                    all_next_move.Add(temp);
+                                    continue;
+                                }
+                                else if (piece_array[x, i] == null && first_piece_black == true)
+                                {
+                                    continue;
+                                }
+                                else if (first_piece_black == false && piece_array[x, i] != null)
+                                {
+                                    first_piece_black = true;
+                                    continue;
+                                }
+                                else if (first_piece_black == true && piece_array[x, i] != null && piece_array[x, i].transform.tag == "BlackPiece")
+                                {
+                                    temp = (GameObject[,])piece_array.Clone();
+                                    temp[x, i] = temp[x, y];
+                                    temp[x, y] = null;
+                                    all_next_move.Add(temp);
+                                    first_piece_black = false;
+                                    break;
+                                }
+                                else if (first_piece_black == true && piece_array[x, i] != null && piece_array[x, i].transform.tag == "RedPiece")
+                                {
+                                    first_piece_black = false;
+                                    break;
+                                }
+                            }
+                            first_piece_black = false;
+
+                            for (int i = y - 1; i >= 0; i--)
+                            {
+                                if (piece_array[x, i] == null && first_piece_black == false)
+                                {
+                                    temp = (GameObject[,])piece_array.Clone();
+                                    temp[x, i] = temp[x, y];
+                                    temp[x, y] = null;
+                                    all_next_move.Add(temp);
+                                    continue;
+                                }
+                                else if (piece_array[x, i] == null && first_piece_black == true)
+                                {
+                                    continue;
+                                }
+                                else if (first_piece_black == false && piece_array[x, i] != null)
+                                {
+                                    first_piece_black = true;
+                                    continue;
+                                }
+                                else if (first_piece_black == true && piece_array[x, i] != null && piece_array[x, i].transform.tag == "BlackPiece")
+                                {
+                                    temp = (GameObject[,])piece_array.Clone();
+                                    temp[x, i] = temp[x, y];
+                                    temp[x, y] = null;
+                                    all_next_move.Add(temp);
+                                    first_piece_black = false;
+                                    break;
+                                }
+                                else if (first_piece_black == true && piece_array[x, i] != null && piece_array[x, i].transform.tag == "RedPiece")
+                                {
+                                    first_piece_black = false;
+                                    break;
+                                }
+                            }
+                            break;
+                        }
+                }
+            }
+        }
+    }
+
+    //获得棋盘后更新每个物体Piece中的信息
+    static public void UpdatePiece()
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            for (int j = 0; j < 9; j++)
+            {
+                if (PieceManager.piece_array[i, j] != null)
+                {
+                    PieceManager.piece_array[i, j].GetComponent<Piece>().coor_x = i;
+                    PieceManager.piece_array[i, j].GetComponent<Piece>().coor_y = j;
+                    PieceManager.piece_array[i, j].GetComponent<Piece>().is_destory = true;
+                }
+            }
+        }
+    }
 }
