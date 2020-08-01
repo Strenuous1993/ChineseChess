@@ -86,7 +86,7 @@ public class Piece : MonoBehaviour
             case "black_ma(Clone)":
                 piece_power = 400;
                 break;
-            case "blackshi(Clone)":
+            case "black_shi(Clone)":
                 piece_power = 250;
                 break;
             case "black_xiang(Clone)":
@@ -113,17 +113,17 @@ public class Piece : MonoBehaviour
                         piece_attack_power += Mathf.Abs(PieceManager.piece_array[coor_x - 1, coor_y].GetComponent<Piece>().piece_power);
                     }
 
-                    if (coor_x <= 4 && PieceManager.piece_array[coor_x - 1, coor_y] != null && PieceManager.piece_array[coor_x - 1, coor_y].transform.tag == "BlackPiece")
+                    if (coor_x <= 4 && coor_x  - 1 > 0&&PieceManager.piece_array[coor_x - 1, coor_y] != null && PieceManager.piece_array[coor_x - 1, coor_y].transform.tag == "BlackPiece")
                     {
                         piece_attack_power += Mathf.Abs(PieceManager.piece_array[coor_x - 1, coor_y].GetComponent<Piece>().piece_power);
                     }
 
-                    if (coor_x <= 4 && PieceManager.piece_array[coor_x, coor_y - 1] != null && PieceManager.piece_array[coor_x, coor_y - 1].transform.tag == "BlackPiece")
+                    if (coor_x <= 4 && coor_y - 1 > -1 && PieceManager.piece_array[coor_x, coor_y - 1] != null && PieceManager.piece_array[coor_x, coor_y - 1].transform.tag == "BlackPiece")
                     {
                         piece_attack_power += Mathf.Abs(PieceManager.piece_array[coor_x, coor_y - 1].GetComponent<Piece>().piece_power);
                     }
 
-                    if (coor_x <= 4 && PieceManager.piece_array[coor_x, coor_y + 1] != null && PieceManager.piece_array[coor_x, coor_y + 1].transform.tag == "BlackPiece")
+                    if (coor_x <= 4 && coor_y + 1 < 9 && PieceManager.piece_array[coor_x, coor_y + 1] != null && PieceManager.piece_array[coor_x, coor_y + 1].transform.tag == "BlackPiece")
                     {
                         piece_attack_power += Mathf.Abs(PieceManager.piece_array[coor_x, coor_y + 1].GetComponent<Piece>().piece_power);
                     }
@@ -131,35 +131,35 @@ public class Piece : MonoBehaviour
                 }
             case "red_che(Clone)":
                 {
-                    for (int i = coor_x; i < 10; i++)
+                    for (int i = coor_x + 1; i < 10; i++)
                     {
-                        if (PieceManager.piece_array[i, coor_y] != null && PieceManager.piece_array[i, coor_y].transform.name == "RedPiece")
+                        if (PieceManager.piece_array[i, coor_y] != null && PieceManager.piece_array[i, coor_y].transform.tag == "RedPiece")
                             break;
-                        else if (PieceManager.piece_array[i, coor_y] != null && PieceManager.piece_array[i, coor_y].transform.name == "BlackPiece")
+                        else if (PieceManager.piece_array[i, coor_y] != null && PieceManager.piece_array[i, coor_y].transform.tag == "BlackPiece")
                             piece_attack_power += Mathf.Abs(PieceManager.piece_array[i, coor_y].GetComponent<Piece>().piece_power);
                     }
 
-                    for (int i = coor_x; i >= 0; i--)
+                    for (int i = coor_x - 1; i >= 0; i--)
                     {
-                        if (PieceManager.piece_array[i, coor_y] != null && PieceManager.piece_array[i, coor_y].transform.name == "RedPiece")
+                        if (PieceManager.piece_array[i, coor_y] != null && PieceManager.piece_array[i, coor_y].transform.tag == "RedPiece")
                             break;
-                        else if (PieceManager.piece_array[i, coor_y] != null && PieceManager.piece_array[i, coor_y].transform.name == "BlackPiece")
+                        else if (PieceManager.piece_array[i, coor_y] != null && PieceManager.piece_array[i, coor_y].transform.tag == "BlackPiece")
                             piece_attack_power += Mathf.Abs(PieceManager.piece_array[i, coor_y].GetComponent<Piece>().piece_power);
                     }
 
-                    for (int i = coor_y; i < 9; i++)
+                    for (int i = coor_y + 1; i < 9; i++)
                     {
-                        if (PieceManager.piece_array[coor_x, i] != null && PieceManager.piece_array[coor_x, i].transform.name == "RedPiece")
+                        if (PieceManager.piece_array[coor_x, i] != null && PieceManager.piece_array[coor_x, i].transform.tag == "RedPiece")
                             break;
-                        else if (PieceManager.piece_array[coor_y, i] != null && PieceManager.piece_array[coor_y, i].transform.name == "BlackPiece")
+                        else if (PieceManager.piece_array[coor_y, i] != null && PieceManager.piece_array[coor_y, i].transform.tag == "BlackPiece")
                             piece_attack_power += Mathf.Abs(PieceManager.piece_array[coor_y, i].GetComponent<Piece>().piece_power);
                     }
 
-                    for (int i = coor_y; i >= 0; i--)
+                    for (int i = coor_y - 1; i >= 0; i--)
                     {
-                        if (PieceManager.piece_array[coor_x, i] != null && PieceManager.piece_array[coor_x, i].transform.name == "RedPiece")
+                        if (PieceManager.piece_array[coor_x, i] != null && PieceManager.piece_array[coor_x, i].transform.tag == "RedPiece")
                             break;
-                        else if (PieceManager.piece_array[coor_y, i] != null && PieceManager.piece_array[coor_y, i].transform.name == "BlackPiece")
+                        else if (PieceManager.piece_array[coor_y, i] != null && PieceManager.piece_array[coor_y, i].transform.tag == "BlackPiece")
                             piece_attack_power += Mathf.Abs(PieceManager.piece_array[coor_y, i].GetComponent<Piece>().piece_power);
                     }
                     break;
@@ -242,59 +242,59 @@ public class Piece : MonoBehaviour
             case "red_pao(Clone)":
                 {
                     bool first_piece = false;
-                    for (int i = coor_x; i < 10; i++)
+                    for (int i = coor_x + 1; i < 10; i++)
                     {
                         if (PieceManager.piece_array[i, coor_y] != null && first_piece == false)
                         {
                             first_piece = true;
                             continue;
                         }
-                        if (first_piece == true && PieceManager.piece_array[i, coor_y] != null && PieceManager.piece_array[i, coor_y].transform.name == "BlackPiece")
+                        if (first_piece == true && PieceManager.piece_array[i, coor_y] != null && PieceManager.piece_array[i, coor_y].transform.tag == "BlackPiece")
                         {
                             piece_attack_power += Mathf.Abs(PieceManager.piece_array[i, coor_y].GetComponent<Piece>().piece_power);
                             first_piece = false;
                             break;
                         }
                     }
-
-                    for (int i = coor_x; i >= 0; i--)
+                    first_piece = false;
+                    for (int i = coor_x - 1; i >= 0; i--)
                     {
                         if (PieceManager.piece_array[i, coor_y] != null && first_piece == false)
                         {
                             first_piece = true;
                             continue;
                         }
-                        if (first_piece == true && PieceManager.piece_array[i, coor_y] != null && PieceManager.piece_array[i, coor_y].transform.name == "BlackPiece")
+                        if (first_piece == true && PieceManager.piece_array[i, coor_y] != null && PieceManager.piece_array[i, coor_y].transform.tag == "BlackPiece")
                         {
                             piece_attack_power += Mathf.Abs(PieceManager.piece_array[i, coor_y].GetComponent<Piece>().piece_power);
                             first_piece = false;
                             break;
                         }
                     }
-
-                    for (int i = coor_y; i < 9; i++)
+                    first_piece = false;
+                    for (int i = coor_y + 1; i < 9; i++)
                     {
                         if (PieceManager.piece_array[coor_x, i] != null && first_piece == false)
                         {
                             first_piece = true;
                             continue;
                         }
-                        if (first_piece == true && PieceManager.piece_array[coor_x, i] != null && PieceManager.piece_array[coor_x, i].transform.name == "BlackPiece")
+                        if (first_piece == true && PieceManager.piece_array[coor_x, i] != null && PieceManager.piece_array[coor_x, i].transform.tag == "BlackPiece")
                         {
                             piece_attack_power += Mathf.Abs(PieceManager.piece_array[coor_x, i].GetComponent<Piece>().piece_power);
                             first_piece = false;
                             break;
                         }
                     }
-
-                    for (int i = coor_y; i >= 0; i--)
+                    first_piece = false;
+                    for (int i = coor_y - 1; i >= 0; i--)
                     {
                         if (PieceManager.piece_array[coor_x, i] != null && first_piece == false)
                         {
                             first_piece = true;
                             continue;
                         }
-                        if (first_piece == true && PieceManager.piece_array[coor_x, i] != null && PieceManager.piece_array[coor_x, i].transform.name == "BlackPiece")
+                        if (first_piece == true && PieceManager.piece_array[coor_x, i] != null && PieceManager.piece_array[coor_x, i].transform.tag == "BlackPiece")
                         {
                             piece_attack_power += Mathf.Abs(PieceManager.piece_array[coor_x, i].GetComponent<Piece>().piece_power);
                             first_piece = false;
@@ -313,20 +313,20 @@ public class Piece : MonoBehaviour
                 {
                     if (coor_x < 5 && PieceManager.piece_array[coor_x + 1, coor_y] != null && PieceManager.piece_array[coor_x + 1, coor_y].transform.tag == "RedPiece")
                     {
-                        piece_attack_power += Mathf.Abs(PieceManager.piece_array[coor_x - 1, coor_y].GetComponent<Piece>().piece_power);
+                        piece_attack_power += Mathf.Abs(PieceManager.piece_array[coor_x + 1, coor_y].GetComponent<Piece>().piece_power);
                     }
 
-                    if (coor_x >= 5 && PieceManager.piece_array[coor_x + 1, coor_y] != null && PieceManager.piece_array[coor_x + 1, coor_y].transform.tag == "RedPiece")
+                    if (coor_x >= 5 && coor_x + 1 < 10 &&PieceManager.piece_array[coor_x + 1, coor_y] != null && PieceManager.piece_array[coor_x + 1, coor_y].transform.tag == "RedPiece")
                     {
                         piece_attack_power += Mathf.Abs(PieceManager.piece_array[coor_x + 1, coor_y].GetComponent<Piece>().piece_power);
                     }
 
-                    if (coor_x >= 5 && PieceManager.piece_array[coor_x, coor_y - 1] != null && PieceManager.piece_array[coor_x, coor_y - 1].transform.tag == "RedPiece")
+                    if (coor_x >= 5 &&  coor_y - 1 > -1 && PieceManager.piece_array[coor_x, coor_y - 1] != null && PieceManager.piece_array[coor_x, coor_y - 1].transform.tag == "RedPiece")
                     {
                         piece_attack_power += Mathf.Abs(PieceManager.piece_array[coor_x, coor_y - 1].GetComponent<Piece>().piece_power);
                     }
 
-                    if (coor_x >= 5 && PieceManager.piece_array[coor_x, coor_y + 1] != null && PieceManager.piece_array[coor_x, coor_y + 1].transform.tag == "RedPiece")
+                    if (coor_x >= 5 && coor_y + 1 < 9 && PieceManager.piece_array[coor_x, coor_y + 1] != null && PieceManager.piece_array[coor_x, coor_y + 1].transform.tag == "RedPiece")
                     {
                         piece_attack_power += Mathf.Abs(PieceManager.piece_array[coor_x, coor_y + 1].GetComponent<Piece>().piece_power);
                     }
@@ -334,35 +334,35 @@ public class Piece : MonoBehaviour
                 }
             case "black_che(Clone)":
                 {
-                    for (int i = coor_x; i < 10; i++)
+                    for (int i = coor_x + 1; i < 10; i++)
                     {
-                        if (PieceManager.piece_array[i, coor_y] != null && PieceManager.piece_array[i, coor_y].transform.name == "BlackPiece")
+                        if (PieceManager.piece_array[i, coor_y] != null && PieceManager.piece_array[i, coor_y].transform.tag == "BlackPiece")
                             break;
-                        else if (PieceManager.piece_array[i, coor_y] != null && PieceManager.piece_array[i, coor_y].transform.name == "RedPiece")
+                        else if (PieceManager.piece_array[i, coor_y] != null && PieceManager.piece_array[i, coor_y].transform.tag == "RedPiece")
                             piece_attack_power += Mathf.Abs(PieceManager.piece_array[i, coor_y].GetComponent<Piece>().piece_power);
                     }
 
-                    for (int i = coor_x; i >= 0; i--)
+                    for (int i = coor_x - 1; i >= 0; i--)
                     {
-                        if (PieceManager.piece_array[i, coor_y] != null && PieceManager.piece_array[i, coor_y].transform.name == "BlackPiece")
+                        if (PieceManager.piece_array[i, coor_y] != null && PieceManager.piece_array[i, coor_y].transform.tag == "BlackPiece")
                             break;
-                        else if (PieceManager.piece_array[i, coor_y] != null && PieceManager.piece_array[i, coor_y].transform.name == "RedPiece")
+                        else if (PieceManager.piece_array[i, coor_y] != null && PieceManager.piece_array[i, coor_y].transform.tag == "RedPiece")
                             piece_attack_power += Mathf.Abs(PieceManager.piece_array[i, coor_y].GetComponent<Piece>().piece_power);
                     }
 
-                    for (int i = coor_y; i < 9; i++)
+                    for (int i = coor_y + 1; i < 9; i++)
                     {
-                        if (PieceManager.piece_array[coor_x, i] != null && PieceManager.piece_array[coor_x, i].transform.name == "BlackPiece")
+                        if (PieceManager.piece_array[coor_x, i] != null && PieceManager.piece_array[coor_x, i].transform.tag == "BlackPiece")
                             break;
-                        else if (PieceManager.piece_array[coor_y, i] != null && PieceManager.piece_array[coor_y, i].transform.name == "RedPiece")
+                        else if (PieceManager.piece_array[coor_y, i] != null && PieceManager.piece_array[coor_y, i].transform.tag == "RedPiece")
                             piece_attack_power += Mathf.Abs(PieceManager.piece_array[coor_y, i].GetComponent<Piece>().piece_power);
                     }
 
-                    for (int i = coor_y; i >= 0; i--)
+                    for (int i = coor_y - 1; i >= 0; i--)
                     {
-                        if (PieceManager.piece_array[coor_x, i] != null && PieceManager.piece_array[coor_x, i].transform.name == "BlackPiece")
+                        if (PieceManager.piece_array[coor_x, i] != null && PieceManager.piece_array[coor_x, i].transform.tag == "BlackPiece")
                             break;
-                        else if (PieceManager.piece_array[coor_y, i] != null && PieceManager.piece_array[coor_y, i].transform.name == "RedPiece")
+                        else if (PieceManager.piece_array[coor_y, i] != null && PieceManager.piece_array[coor_y, i].transform.tag == "RedPiece")
                             piece_attack_power += Mathf.Abs(PieceManager.piece_array[coor_y, i].GetComponent<Piece>().piece_power);
                     }
                     break;
@@ -445,59 +445,59 @@ public class Piece : MonoBehaviour
             case "black_pao(Clone)":
                 {
                     bool first_piece_black = false;
-                    for (int i = coor_x; i < 10; i++)
+                    for (int i = coor_x + 1; i < 10; i++)
                     {
                         if (PieceManager.piece_array[i, coor_y] != null && first_piece_black == false)
                         {
                             first_piece_black = true;
                             continue;
                         }
-                        if (first_piece_black == true && PieceManager.piece_array[i, coor_y] != null && PieceManager.piece_array[i, coor_y].transform.name == "RedPiece")
+                        if (first_piece_black == true && PieceManager.piece_array[i, coor_y] != null && PieceManager.piece_array[i, coor_y].transform.tag == "RedPiece")
                         {
                             piece_attack_power += Mathf.Abs(PieceManager.piece_array[i, coor_y].GetComponent<Piece>().piece_power);
                             first_piece_black = false;
                             break;
                         }
                     }
-
-                    for (int i = coor_x; i >= 0; i--)
+                    first_piece_black = false;
+                    for (int i = coor_x - 1; i >= 0; i--)
                     {
                         if (PieceManager.piece_array[i, coor_y] != null && first_piece_black == false)
                         {
                             first_piece_black = true;
                             continue;
                         }
-                        if (first_piece_black == true && PieceManager.piece_array[i, coor_y] != null && PieceManager.piece_array[i, coor_y].transform.name == "RedPiece")
+                        if (first_piece_black == true && PieceManager.piece_array[i, coor_y] != null && PieceManager.piece_array[i, coor_y].transform.tag == "RedPiece")
                         {
                             piece_attack_power += Mathf.Abs(PieceManager.piece_array[i, coor_y].GetComponent<Piece>().piece_power);
                             first_piece_black = false;
                             break;
                         }
                     }
-
-                    for (int i = coor_y; i < 9; i++)
+                    first_piece_black = false;
+                    for (int i = coor_y + 1; i < 9; i++)
                     {
                         if (PieceManager.piece_array[coor_x, i] != null && first_piece_black == false)
                         {
                             first_piece_black = true;
                             continue;
                         }
-                        if (first_piece_black == true && PieceManager.piece_array[coor_x, i] != null && PieceManager.piece_array[coor_x, i].transform.name == "RedPiece")
+                        if (first_piece_black == true && PieceManager.piece_array[coor_x, i] != null && PieceManager.piece_array[coor_x, i].transform.tag == "RedPiece")
                         {
                             piece_attack_power += Mathf.Abs(PieceManager.piece_array[coor_x, i].GetComponent<Piece>().piece_power);
                             first_piece_black = false;
                             break;
                         }
                     }
-
-                    for (int i = coor_y; i >= 0; i--)
+                    first_piece_black = false;
+                    for (int i = coor_y - 1; i >= 0; i--)
                     {
                         if (PieceManager.piece_array[coor_x, i] != null && first_piece_black == false)
                         {
                             first_piece_black = true;
                             continue;
                         }
-                        if (first_piece_black == true && PieceManager.piece_array[coor_x, i] != null && PieceManager.piece_array[coor_x, i].transform.name == "RedPiece")
+                        if (first_piece_black == true && PieceManager.piece_array[coor_x, i] != null && PieceManager.piece_array[coor_x, i].transform.tag == "RedPiece")
                         {
                             piece_attack_power += Mathf.Abs(PieceManager.piece_array[coor_x, i].GetComponent<Piece>().piece_power);
                             first_piece_black = false;

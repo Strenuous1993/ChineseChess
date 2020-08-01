@@ -98,7 +98,7 @@ public class PieceManager : MonoBehaviour
         openWith.Add("38", bing_black_5);
         InitialPiece();
         PieceMapArray();
-        SetFirstPieceAllPower();
+        SetAttackPower();
 
     }
     void Awake()
@@ -170,7 +170,9 @@ public class PieceManager : MonoBehaviour
                         break;
                     }
                 }
-                if(child.gameObject.GetComponent<Piece>().is_destory == true)
+                bool test = child.gameObject.GetComponent<Piece>().is_destory;
+
+                if (child.gameObject.GetComponent<Piece>().is_destory == true)
                 {
                     Destroy(child.gameObject);
                 }
@@ -179,14 +181,16 @@ public class PieceManager : MonoBehaviour
     }
 
     //设置第一次初始化各棋子的power
-    public void SetFirstPieceAllPower()
+    static public void SetAttackPower()
     {
         foreach (GameObject gameObject in piece_array)
         {
             if (gameObject != null)
             {
-                gameObject.GetComponent<Piece>().PiecePowerSet();
+                //gameObject.GetComponent<Piece>().PiecePowerSet();
                 gameObject.GetComponent<Piece>().PieceAttackPowerSet();
+                //int a = gameObject.GetComponent<Piece>().piece_attack_power;
+                //Debug.Log(a);
             }
         }
     }
@@ -199,11 +203,14 @@ public class PieceManager : MonoBehaviour
         int attack_power_black = 0;
         int power_black = 0;
         double total_power;
+
+        SetAttackPower();
+
         foreach (GameObject gameObject in piece_array)
         {
             if (gameObject != null && gameObject.transform.tag == "RedPiece")
             {
-                power_red -= gameObject.GetComponent<Piece>().piece_power;
+                power_red += gameObject.GetComponent<Piece>().piece_power;
                 attack_power_red -= gameObject.GetComponent<Piece>().piece_attack_power;
             }
             else if (gameObject != null && gameObject.transform.tag == "BlackPiece")

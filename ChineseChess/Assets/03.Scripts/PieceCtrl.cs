@@ -27,7 +27,7 @@ public class PieceCtrl : MonoBehaviour
         }
         else
         {
-            AI.ABMaxMin(PieceManager.piece_array, 1, 3, double.NegativeInfinity, double.PositiveInfinity);
+            AI.ABMaxMin(PieceManager.piece_array, 1, 4, double.NegativeInfinity, double.PositiveInfinity);
             PieceManager.piece_array = (GameObject[,])AI.best_move.Clone();
             PieceManager.UpdatePiece();
             PieceManager.ArrayMapPiece();
@@ -193,12 +193,6 @@ public class PieceCtrl : MonoBehaviour
         float dis_z = Mathf.Abs(chess_z - destination_z);
         //Debug.Log("x坐标" + chess_x);
         //Debug.Log("z坐标" + chess_z);
-        Debug.Log("第一个条件：" + (chess_x == destination_x));
-        Debug.Log("第二个条件：" + (chess_x != destination_x && chess_z == destination_z));
-        Debug.Log("c_x=" + chess_x);
-        Debug.Log("d_x=" + destination_x);
-        Debug.Log("c_z=" + chess_z);
-        Debug.Log("d_z=" + destination_z);
         if ((dis_x < 0.1 && chess_z != destination_z) ^ (chess_x != destination_x && dis_z < 0.1))
         {
             chess.transform.position = hit.collider.gameObject.transform.position;

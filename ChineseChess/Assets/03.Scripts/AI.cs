@@ -35,23 +35,18 @@ public class AI : MonoBehaviour
 
         if (depth % 2 == 1)
         {
-            foreach (GameObject gameObject in piece_array)
-            {
-                if ( gameObject != null && gameObject.transform.tag == "BlackPiece")
-                {
-                    PieceManager.GetAllBlackMoves(piece_array, all_next_move);
-                }
-            }
+
+            PieceManager.GetAllBlackMoves(piece_array, all_next_move);
+            //List<double> temp = new List<double>();
+            //foreach(GameObject[,] gameObjects in all_next_move)
+            //{
+            //    temp.Add(PieceManager.PiecePower(gameObjects));
+            //}
+            //int b = 0;
         }
         else if (depth % 2 == 0)
         {
-            foreach (GameObject gameObject in piece_array)
-            {
-                if (gameObject != null && gameObject.transform.tag == "RedPiece")
-                {
-                    PieceManager.GetAllRedMoves(piece_array, all_next_move);
-                }
-            }
+            PieceManager.GetAllRedMoves(piece_array, all_next_move);
         }
         foreach (GameObject[,] gameObjects in all_next_move)
         {
@@ -78,7 +73,7 @@ public class AI : MonoBehaviour
         bool red_jiang_exist = false;
         foreach (GameObject gameObject in piece_array)
         {
-            if ( gameObject != null && gameObject.transform.name == "black_jiang(Clone)")
+            if (gameObject != null && gameObject.transform.name == "black_jiang(Clone)")
             {
                 black_jiang_exist = true;
             }
